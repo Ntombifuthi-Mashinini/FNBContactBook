@@ -19,13 +19,31 @@
                 return response.json();
             })
             .then(function(data){
-                console.log(data);
+                displayOutput(data);
+                //console.log(data);
             })
             .catch(function(error){
                 console.log("Error loading contacts:", error);
                 document.getElementById("table").innerText = "Failed to load contacts.";
             });
         }
+
+        function displayOutput(data){
+    let output = "<table>";
+
+    for (let a in data) {
+        output += `
+            <tr>
+                <td><img src="${rootPath}controller/uploads/${data[a].avatar}"></td>
+            </tr>
+        `;
+    }
+
+    output += "</table>";
+    document.getElementById("table").innerHTML = output;
+}
+
     </script>
 </body>
 </html>
+
