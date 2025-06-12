@@ -35,7 +35,17 @@
 <script src="config.js"></script>
 
 <script>
+    var id = geId;
+    console.log("The ID is: " + id);
 
+    function getId(){
+        var url = window.location.href;
+        var pos = url.search("=");
+        var id = url.slice(pos + 1);
+        return id;
+
+
+    }
 </script>
 
 </body>
