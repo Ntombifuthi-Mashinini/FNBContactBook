@@ -40,7 +40,7 @@
       e.preventDefault();
 
       const form = new FormData(document.getElementById("addForm"));
-      form.append("apiKey", apiKey); // from config.js
+      form.append("apiKey", apiKey);
 
       fetch(rootPath + "controller/insert-contact/", {
         method: "POST",
