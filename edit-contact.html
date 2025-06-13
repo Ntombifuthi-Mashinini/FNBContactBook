@@ -52,7 +52,7 @@
             return response.json();
         })
         .then(function(data){
-            //display contact info
+            displayOutput(data);
             console.log(data);
         })
     }
@@ -60,6 +60,18 @@
     function homeLink(){
         window.open("index.html", "_self");
     }
+function displayOutput(data) {
+    let avatarImg = `<img src="${rootPath}controller/uploads/${data[0].avatar}" widtg="200" />`;
+    document.getElementById("avatarImage").innerHTML = avatarImg;
+    document.getElementById("firstName").value = data[0].firstName;
+    document.getElementById("lastName").value = data[0].lastName;
+    document.getElementById("mobile").value = data[0].mobile;
+    document.getElementById("email").value = data[0].email;
+}
+
+
+
+
 </script>
 
 </body>
