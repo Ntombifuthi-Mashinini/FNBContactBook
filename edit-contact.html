@@ -9,58 +9,84 @@
     <div id="avatarImage"></div>
     <br>
     <form id="editForm">
-    <label for="firstname">Firstname:</label>
-    <input type="text" id="firstname" name="firstname" readonly> <br>
+        <label for="firstname">Firstname:</label>
+        <input type="text" id="firstname" name="firstname" readonly> <br>
 
-    <label for="lastname">Lastname:</label>
-    <input type="text" id="lastname" name="lastname" readonly> <br>
+        <label for="lastname">Lastname:</label>
+        <input type="text" id="lastname" name="lastname" readonly> <br>
 
-    <label for="mobile">Mobile:</label>
-    <input type="text" id="mobile" name="mobile" readonly> <br>
+        <label for="mobile">Mobile:</label>
+        <input type="text" id="mobile" name="mobile" readonly> <br>
 
-    <label for="email">Email:</label>
-    <input type="email" id="email" name="email" readonly> <br>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" readonly> <br>
 
-    <label for="avatar" id="avataLabel" hidden>Change profile image</label>
-    <input type="file" id="avatar" name="avatar" hidden> <br>
+        <label for="avatar" id="avataLabel" hidden>Change profile image</label>
+        <input type="file" id="avatar" name="avatar" hidden> <br>
 
-    <button type="submit" id="submitForm" hidden>Submit</button>
-</form>
-</br>
+        <button type="submit" id="submitForm" hidden>Submit</button>
+    </form>
+    </br>
 
-<button id="homeLink" type="button">Home</button>
-<button id="editContact" type="button">Edit</button>
-<button id="deleteContact" type="button">Delete</button>
+    <button id="homeLink" type="button">Home</button>
+    <button id="editContact" type="button">Edit</button>
+    <button id="deleteContact" type="button">Delete</button>
 
-<script src="config.js"></script>
+    <script src="config.js"></script>
 
-<script>
-    var id = getId;
-    document.getElementById("homeLink").addEventListener('click', homeLink);
-    console.log("The ID is: " + id);
+    <script>
+        var id = getId(); 
+        document.getElementById("homeLink").addEventListener('click', homeLink);
+        console.log("The ID is: " + id);
 
-    function getId(){
-        var url = window.location.href;
-        var pos = url.search("=");
-        var id = url.slice(pos + 1);
-        return id;
-    }
+        function getId(){
+            var url = window.location.href;
+            var pos = url.search("=");
+            var id = url.slice(pos + 1);
+            return id;
+        }
 
-    function getContact(){
-        fetch(rootpath + 'controller/get-contact/?id=' + id)
-        .then(function(response){
-            return response.json();
-        })
-        .then(function(data){
-            //display contact info
-            console.log(data);
-        })
-    }
+        function getContact(){
+            console.log("Fetching contact for ID:", id);
+            fetch(rootPath + 'controller/get-contact/?id=' + id, {
+                headers: {
+                    "Authorization": apiKey
+                }
+            })
+            .then(function(response) {
+                if (!response.ok) {
+                    throw new Error("Network response was not OK");
+                }
+                return response.text();
+            })
+            .then(function(text) {
+                try {
+                    var data = JSON.parse(text);
+                    console.log(data);
+                    document.getElementById("firstname").value = data.firstname || "";
+                    document.getElementById("lastname").value = data.lastname || "";
+                    document.getElementById("mobile").value = data.mobile || "";
+                    document.getElementById("email").value = data.email || "";
 
-    function homeLink(){
-        window.open("index.html", "_self");
-    }
-</script>
+                    if (data.avatar) {
+                        document.getElementById("avatarImage").innerHTML = '<img src="' + data.avatar + '" width="100">';
+                    }
+
+                } catch (err) {
+                    console.error("Failed to parse JSON:", err);
+                    console.log("Raw response text was:", text);
+                }
+            })
+            .catch(function(error) {
+                console.error("Error fetching contact:", error);
+            });
+        }
+
+        function homeLink(){
+            window.open("index.html", "_self");
+        }
+    </script>
 
 </body>
 </html>
+
